@@ -4,10 +4,10 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.swing.table.AbstractTableModel;
 
-public class SearchTableModel extends AbstractTableModel
+public class OutboxTableModel extends AbstractTableModel
 {
 
-    public SearchTableModel()
+    public OutboxTableModel()
     {
         list = new ArrayList();
         num_messages = 0;

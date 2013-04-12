@@ -104,7 +104,7 @@ public class MessageViewer extends JPanel
 
         printwriter.flush();
         bufferedreader.close();
-        URL url = getClass().getResource("/TempMails/temp.html");
+        URL url = getClass().getResource("/temp/temp.html");
         editorPane.setContentType(s);
         editorPane.setPage(url);
     }
@@ -113,8 +113,9 @@ public class MessageViewer extends JPanel
         throws Exception
     {
         msg = message;
-        FileOutputStream fileoutputstream = new FileOutputStream(".\\TempMails\\temp.html");
-        OutputStreamWriter outputstreamwriter = new OutputStreamWriter(fileoutputstream);
+        File file = new File (".\\temp\\temp.html");
+        FileOutputStream fileoutputstream = new FileOutputStream(".\\temp\\temp.html");
+        OutputStreamWriter outputstreamwriter = new OutputStreamWriter(fileoutputstream,"KOI8-U");
         BufferedWriter bufferedwriter = new BufferedWriter(outputstreamwriter);
         PrintWriter printwriter = new PrintWriter(bufferedwriter);
         if(message.getContentType().toLowerCase().contains("text/plain"))
@@ -136,7 +137,7 @@ public class MessageViewer extends JPanel
                 printwriter.println((new StringBuilder()).append("<h1>").append(((MimeMessage)message).getSubject()).append("</h1>").append("<hr>").append("<br>").toString());
                 processMultipart(multipart, printwriter);
                 printwriter.flush();
-                URL url = getClass().getResource("/TempMails/temp.html");
+                URL url = url=file.toURL();
                 editorPane.setContentType("text/html");
                 editorPane.setPage(url);
             } else
@@ -158,11 +159,9 @@ public class MessageViewer extends JPanel
             }
 
             final MessageViewer this$0;
-
-            
+ 
             {
                 this$0 = MessageViewer.this;
-                super();
             }
         }
 );
@@ -178,7 +177,6 @@ public class MessageViewer extends JPanel
             
             {
                 this$0 = MessageViewer.this;
-                super();
             }
         }
 );
@@ -194,7 +192,6 @@ public class MessageViewer extends JPanel
             
             {
                 this$0 = MessageViewer.this;
-                super();
             }
         }
 );
@@ -210,13 +207,9 @@ public class MessageViewer extends JPanel
             {
                 ((SentMailPanel)panel).backToOutbox();
             }
-
-            final MessageViewer this$0;
-
-            
+            final MessageViewer this$0;            
             {
                 this$0 = MessageViewer.this;
-                super();
             }
         }
 );

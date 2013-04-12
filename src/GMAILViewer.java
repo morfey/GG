@@ -22,7 +22,8 @@ public class GMAILViewer extends JFrame
     {
         try
         {
-            setCursor(Cursor.getPredefinedCursor(3));
+        	setCursor(Cursor.getDefaultCursor());
+            
             InboxPanel inboxpanel = new InboxPanel(session, store, this);
             scrollPane.add(inboxpanel);
             inboxpanel.setVisible(true);
@@ -32,18 +33,11 @@ public class GMAILViewer extends JFrame
         }
         catch(Exception exception)
         {
-            setCursor(Cursor.getDefaultCursor());
-            break MISSING_BLOCK_LABEL_92;
+        	setCursor(Cursor.getPredefinedCursor(3));
         }
-        setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_92;
-        Exception exception1;
-        exception1;
-        setCursor(Cursor.getDefaultCursor());
-        throw exception1;
     }
 
-    private void loadSentMailbox()
+    private void loadSentMailbox() throws Exception
     {
         setCursor(Cursor.getPredefinedCursor(3));
         SentMailPanel sentmailpanel = new SentMailPanel(session, store, this);
@@ -53,16 +47,6 @@ public class GMAILViewer extends JFrame
         scrollPane.revalidate();
         scrollPane.repaint();
         setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_96;
-        Exception exception;
-        exception;
-        exception.printStackTrace();
-        setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_96;
-        Exception exception1;
-        exception1;
-        setCursor(Cursor.getDefaultCursor());
-        throw exception1;
     }
 
     public void setStatus(String s)
@@ -70,7 +54,7 @@ public class GMAILViewer extends JFrame
         jLabel2.setText(s);
     }
 
-    private void searchMails()
+    private void searchMails() throws MessagingException
     {
         setCursor(Cursor.getPredefinedCursor(3));
         if(!searchField.getText().equals(""))
@@ -87,21 +71,11 @@ public class GMAILViewer extends JFrame
             scrollPane.repaint();
         }
         setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_166;
-        Exception exception;
-        exception;
-        exception.printStackTrace();
-        setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_166;
-        Exception exception1;
-        exception1;
-        setCursor(Cursor.getDefaultCursor());
-        throw exception1;
     }
 
     private void initComponents()
     {
-        setTitle("GMAIL: Email from google");
+        setTitle("GG");
         jPanel1 = new JPanel();
         jLabel1 = new JLabel();
         searchField = new JTextField();
@@ -110,7 +84,11 @@ public class GMAILViewer extends JFrame
 
             public void actionPerformed(ActionEvent actionevent)
             {
-                searchMails();
+                try {
+					searchMails();
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
             }
 
             final GMAILViewer this$0;
@@ -118,7 +96,6 @@ public class GMAILViewer extends JFrame
             
             {
                 this$0 = GMAILViewer.this;
-                super();
             }
         }
 );
@@ -134,7 +111,6 @@ public class GMAILViewer extends JFrame
         setDefaultCloseOperation(3);
         jPanel1.setBackground(new Color(255, 255, 255));
         jPanel1.setBorder(new LineBorder(new Color(149, 179, 249), 2, true));
-        jLabel1.setIcon(new ImageIcon("images\\logo2.gif"));
         jLabel1.setText("jLabel1");
         searchField.setFont(new Font("Times New Roman", 0, 14));
         searchField.setBorder(new LineBorder(new Color(149, 179, 249), 1, true));
@@ -161,7 +137,6 @@ public class GMAILViewer extends JFrame
             
             {
                 this$0 = GMAILViewer.this;
-                super();
             }
         }
 );
@@ -180,7 +155,6 @@ public class GMAILViewer extends JFrame
             
             {
                 this$0 = GMAILViewer.this;
-                super();
             }
         }
 );
@@ -191,7 +165,11 @@ public class GMAILViewer extends JFrame
 
             public void actionPerformed(ActionEvent actionevent)
             {
-                sentMailActionPerformed(actionevent);
+                try {
+					sentMailActionPerformed(actionevent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
             }
 
             final GMAILViewer this$0;
@@ -199,7 +177,6 @@ public class GMAILViewer extends JFrame
             
             {
                 this$0 = GMAILViewer.this;
-                super();
             }
         }
 );
@@ -244,7 +221,7 @@ public class GMAILViewer extends JFrame
         loadInbox();
     }
 
-    private void sentMailActionPerformed(ActionEvent actionevent)
+    private void sentMailActionPerformed(ActionEvent actionevent) throws Exception
     {
         loadSentMailbox();
     }

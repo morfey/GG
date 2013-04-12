@@ -24,7 +24,7 @@ public class SentMailPanel extends JPanel
     public void loadMessages(int i, int j)
         throws Exception
     {
-        Folder folder = store.getFolder("[Gmail]/Sent Mail");
+        Folder folder = store.getFolder("INBOX");
         folder.open(2);
         if(i < 0 || j < 0)
         {
@@ -62,7 +62,7 @@ public class SentMailPanel extends JPanel
         jScrollPane1.repaint();
     }
 
-    private void showMessage(int i)
+    private void showMessage(int i) throws Exception
     {
         setCursor(Cursor.getPredefinedCursor(3));
         javax.mail.Message message = outbox_tab.getMessage(i);
@@ -74,20 +74,11 @@ public class SentMailPanel extends JPanel
         jScrollPane1.revalidate();
         jScrollPane1.repaint();
         setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_114;
-        Exception exception;
-        exception;
-        JOptionPane.showMessageDialog(this, exception.getMessage(), "Error Loading Message", 0);
-        exception.printStackTrace();
         setCursor(Cursor.getDefaultCursor());
-        break MISSING_BLOCK_LABEL_114;
-        Exception exception1;
-        exception1;
         setCursor(Cursor.getDefaultCursor());
-        throw exception1;
     }
 
-    private void tableSelectionChanged(MouseEvent mouseevent)
+    private void tableSelectionChanged(MouseEvent mouseevent) throws Exception
     {
         int i = jTable1.getSelectedRow();
         System.out.println(i);
@@ -101,7 +92,11 @@ public class SentMailPanel extends JPanel
 
             public void mouseClicked(MouseEvent mouseevent)
             {
-                tableSelectionChanged(mouseevent);
+                try {
+					tableSelectionChanged(mouseevent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
             }
 
             final SentMailPanel this$0;
@@ -109,7 +104,6 @@ public class SentMailPanel extends JPanel
             
             {
                 this$0 = SentMailPanel.this;
-                super();
             }
         }
 );
@@ -121,18 +115,14 @@ public class SentMailPanel extends JPanel
                 outbox_tab.clearAll();
                 upperLimit = lowerLimit;
                 lowerLimit -= 20;
-                loadMessages(lowerLimit, upperLimit);
+                try {
+					loadMessages(lowerLimit, upperLimit);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
                 setCursor(Cursor.getDefaultCursor());
-                break MISSING_BLOCK_LABEL_127;
-                Exception exception;
-                exception;
-                JOptionPane.showMessageDialog(viewer, exception.getMessage(), "Error Loading Sent Mails", 0);
                 setCursor(Cursor.getDefaultCursor());
-                break MISSING_BLOCK_LABEL_127;
-                Exception exception1;
-                exception1;
                 setCursor(Cursor.getDefaultCursor());
-                throw exception1;
             }
 
             final SentMailPanel this$0;
@@ -140,7 +130,6 @@ public class SentMailPanel extends JPanel
             
             {
                 this$0 = SentMailPanel.this;
-                super();
             }
         }
 );
@@ -152,18 +141,14 @@ public class SentMailPanel extends JPanel
                 outbox_tab.clearAll();
                 lowerLimit = upperLimit;
                 upperLimit += 20;
-                loadMessages(lowerLimit, upperLimit);
+                try {
+					loadMessages(lowerLimit, upperLimit);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
                 setCursor(Cursor.getDefaultCursor());
-                break MISSING_BLOCK_LABEL_127;
-                Exception exception;
-                exception;
-                JOptionPane.showMessageDialog(viewer, exception.getMessage(), "Error Loading Inbox", 0);
                 setCursor(Cursor.getDefaultCursor());
-                break MISSING_BLOCK_LABEL_127;
-                Exception exception1;
-                exception1;
                 setCursor(Cursor.getDefaultCursor());
-                throw exception1;
             }
 
             final SentMailPanel this$0;
@@ -171,7 +156,6 @@ public class SentMailPanel extends JPanel
             
             {
                 this$0 = SentMailPanel.this;
-                super();
             }
         }
 );
