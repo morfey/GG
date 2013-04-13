@@ -3,18 +3,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Properties;
+import java.util.Scanner;
+
 import javax.mail.*;
 import javax.swing.*;
 
 public class EmailClient extends JFrame
 {
+	private File fuser = new File(".\\properties\\users");
 	private Store store = null;
+	private int port = 995;
+	public boolean flag=false;
+	public boolean flag1=false;
+	private Session session = null;
+	private URLName urlname = null;
     public EmailClient()
     {
+    	
         initComponents();
         registerComponents();
     }
-
+    int getport(){
+    	return port;
+    }
+    public Store getStore() {
+		return store;
+	}
     private void registerComponents()
     {
         login.addActionListener(new ActionListener() {
@@ -22,7 +36,7 @@ public class EmailClient extends JFrame
             public void actionPerformed(ActionEvent actionevent)
             {
                 try {
-					authenticate();
+					authenticate(username.getText(),new String(password.getPassword()));
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
@@ -34,17 +48,17 @@ public class EmailClient extends JFrame
         }
 );
     }
-
-    private void authenticate() throws Throwable
+    public void authenticate(String username, String password) throws Throwable
     {
     	setCursor(Cursor.getPredefinedCursor(3));
-        File file = new File(".\\properties\\parameters.properties");
+        File file = new File(".\\properties\\parameters.properties"); 
+        FileWriter wrt = new FileWriter(fuser,true);
         FileInputStream fileinputstream = new FileInputStream(file);
         Properties properties = System.getProperties();
         properties.load(fileinputstream);
-        properties.setProperty("mail.pop3.port", "995");
+        properties.setProperty("mail.pop3.port", String.valueOf(port));
         properties.setProperty("mail.pop3.socketFactory.port",
-				"995");
+        		String.valueOf(port));
         properties.setProperty("mail.pop3.socketFactory.class",
 				"javax.net.ssl.SSLSocketFactory");
         properties.setProperty("mail.pop3.socketFactory.fallback", "false");
@@ -53,15 +67,23 @@ public class EmailClient extends JFrame
 		Session session = null;
 		session = Session.getInstance(properties);
 		session.setDebug(true);
+		if (flag1){
+	        wrt.append("\r\n");
+	        wrt.flush();}
+		if (!flag){
+			wrt.append(username+" "+password);
+			wrt.flush();}
+        Scanner in = new Scanner(fuser);
 		try {
 			// Connect to host
 			store = session.getStore("pop3");
-			store.connect("pop.gmail.com", -1, username.getText(), new String(password.getPassword()));
+			store.connect("pop.gmail.com", -1, username, password);
 		} catch (Exception ex) {
 		
 			System.exit(-1);
 		}
-		Properties props = System.getProperties();
+
+		/*Properties props = System.getProperties();
 	    props.setProperty("mail.store.protocol", "imaps");
 	    Session session1 = Session.getDefaultInstance(props, null);
 	    session1.setDebug(true);
@@ -71,15 +93,14 @@ public class EmailClient extends JFrame
 
 	    Folder[] f = store1.getDefaultFolder().list();
 	    for(Folder fd:f)
-	        System.out.println(">> "+fd.getName());
-        URLName urlname = new URLName((new StringBuilder()).append("pop3").append("://").append(username.getText()).append(":").append(new String(password.getPassword())).append("pop.gmail.com").toString());
+	        System.out.println(">> "+fd.getName());*/
+        urlname = new URLName((new StringBuilder()).append("pop3").append("://").append(username).append(":").append(password).append("pop.gmail.com").toString());
         status.setText("Loading Inbox.......");
         (new GMAILViewer(session, store, urlname)).setVisible(true);
         status.setText("Loading Inbox.......");
 		setCursor(Cursor.getDefaultCursor());
 		dispose();
-    }
-
+    }   
     private void initComponents()
     {
         String s = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
@@ -165,7 +186,8 @@ public class EmailClient extends JFrame
 
             public void run()
             {
-                (new EmailClient()).setVisible(true);
+
+					(new EmailClient()).setVisible(true);
             }
 
         }

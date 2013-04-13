@@ -4,10 +4,15 @@ import org.junit.Test;
 
 
 public class EmailClientTest {
-
+	/*EmailClient e = new EmailClient();
 	@Test
 	public void testEmailClient() {
-		fail("Еще не реализовано");
+		assertEquals(e.getport(),1026);
 	}
+	
+	@Test
+	public void test2(){
+		assertNull(e.getStore());
+	}*/
 
 }

@@ -1,15 +1,49 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.mail.*;
-import javax.mail.search.*;
-import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.URLName;
+import javax.mail.search.FromStringTerm;
+import javax.mail.search.OrTerm;
+import javax.mail.search.SubjectTerm;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class GMAILViewer extends JFrame
 {
-
-    public GMAILViewer(Session session1, Store store1, URLName urlname)
+	private EmailClient e = new EmailClient();
+	private ClientHandler users = new ClientHandler();
+	private InputStream fuser = new FileInputStream(".\\properties\\users");
+	private String data[] = new String[5];
+	private String pas[] = new String [5];
+	private boolean flag=false;
+    public GMAILViewer(Session session1, Store store1, URLName urlname) throws Throwable
     {
         initComponents();
         session = session1;
@@ -73,11 +107,13 @@ public class GMAILViewer extends JFrame
         setCursor(Cursor.getDefaultCursor());
     }
 
-    private void initComponents()
+    @SuppressWarnings("null")
+	private void initComponents() throws Throwable
     {
         setTitle("GG");
+        BufferedReader buf=new BufferedReader(new InputStreamReader(fuser));
         jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
+        jLabel1 = new JButton();
         searchField = new JTextField();
         searchMail = new JButton();
         searchMail.addActionListener(new ActionListener() {
@@ -108,10 +144,39 @@ public class GMAILViewer extends JFrame
         scrollPane = new JScrollPane();
         jPanel3 = new JPanel();
         jLabel2 = new JLabel();
+        jScrollPane1 = new JScrollPane();
         setDefaultCloseOperation(3);
         jPanel1.setBackground(new Color(255, 255, 255));
         jPanel1.setBorder(new LineBorder(new Color(149, 179, 249), 2, true));
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("Add Account");
+        jLabel1.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent actionevent)
+            {
+                jLabel1ActionPerformed(actionevent);
+            }
+
+            final GMAILViewer this$0;
+
+            
+            {
+                this$0 = GMAILViewer.this;
+            }
+        });
+        this.addWindowListener(new WindowAdapter(){
+        	public void windowClosing(WindowEvent e) {
+            	FileWriter fstream1;
+				try {
+					fstream1 = new FileWriter(".\\properties\\users");
+					BufferedWriter out1 = new BufferedWriter(fstream1);
+	                out1.write("");
+	                out1.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
+        	}
+        });
         searchField.setFont(new Font("Times New Roman", 0, 14));
         searchField.setBorder(new LineBorder(new Color(149, 179, 249), 1, true));
         searchMail.setText("Search Mail");
@@ -183,10 +248,44 @@ public class GMAILViewer extends JFrame
         contacts.setFont(new Font("Times New Roman", 1, 14));
         contacts.setForeground(new Color(149, 179, 249));
         contacts.setText("Contacts");
+		int i=0;
+		Scanner in = new Scanner(fuser);
+		while (in.hasNextLine()) {
+        	data[i]=in.next();
+        	pas[i]=in.next();
+        	i++;
+        }
+        jList1 = new JList(data);
+        jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jList1);
+        jList1.setFont(new Font("Times New Roman", 1, 14));
+        jList1.setForeground(new Color(149, 179, 249));
+        jList1.addListSelectionListener(
+                new ListSelectionListener() {
+                     public void valueChanged(ListSelectionEvent q) {
+                    	 if (flag){
+                          Object element = jList1.getSelectedValue();
+                          e.flag=true;
+                          int p;
+                          int i=0;
+                          for (i=0; i<data.length;i++ ){
+                        	  if(element.toString()==data[i]){ p=i;
+                        	  break;
+                        	  }
+                          }
+                          try {
+                        	  dispose();
+							e.authenticate(element.toString(),pas[i]);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}}
+                    	 flag=true;
+                     }
+                });
         GroupLayout grouplayout1 = new GroupLayout(jPanel2);
         jPanel2.setLayout(grouplayout1);
-        grouplayout1.setHorizontalGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(grouplayout1.createSequentialGroup().addContainerGap().addGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(contacts, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(sentMail, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(inbox, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(compose, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767)).addContainerGap()));
-        grouplayout1.setVerticalGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(grouplayout1.createSequentialGroup().addContainerGap().addComponent(compose).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(inbox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sentMail).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(contacts).addContainerGap(-1, 32767)));
+        grouplayout1.setHorizontalGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(grouplayout1.createSequentialGroup().addContainerGap().addGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(contacts, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(sentMail, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(inbox, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767).addComponent(compose, javax.swing.GroupLayout.Alignment.TRAILING, -1, 154, 32767)).addContainerGap()));
+        grouplayout1.setVerticalGroup(grouplayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(grouplayout1.createSequentialGroup().addContainerGap().addComponent(compose).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(inbox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(sentMail).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(contacts).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(jScrollPane1).addContainerGap(-1, 32767)));
         scrollPane.setBackground(new Color(255, 255, 255));
         scrollPane.setBorder(new LineBorder(new Color(149, 179, 249), 2, true));
         jPanel3.setBackground(new Color(149, 179, 249));
@@ -215,7 +314,12 @@ public class GMAILViewer extends JFrame
         scrollPane.revalidate();
         scrollPane.repaint();
     }
-
+    private void jLabel1ActionPerformed(ActionEvent actionevent)
+    {
+    	dispose();
+    	e.flag1=true;
+    	e.setVisible(true);
+    }
     private void inboxActionPerformed(ActionEvent actionevent)
     {
         loadInbox();
@@ -225,14 +329,21 @@ public class GMAILViewer extends JFrame
     {
         loadSentMailbox();
     }
-
+    private void formWindowClosing(WindowEvent evt) throws IOException {
+    	FileWriter fstream1 = new FileWriter(".\\properties\\users");
+        BufferedWriter out1 = new BufferedWriter(fstream1);
+        out1.write("");
+        out1.close();
+    }
     Session session;
     Store store;
     URLName urlName;
     private JButton compose;
     private JButton contacts;
     private JButton inbox;
-    private JLabel jLabel1;
+    private JList jList1;
+    private JScrollPane jScrollPane1;
+    private JButton jLabel1;
     private JLabel jLabel2;
     private JPanel jPanel1;
     private JPanel jPanel2;
