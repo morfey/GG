@@ -1,5 +1,9 @@
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.mail.Message;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -15,7 +19,27 @@ public class SearchPanel extends JPanel
         msgs = amessage;
         showAll();
     }
-
+    private void tableSelectionChanged(MouseEvent mouseevent) throws Exception
+    {
+        int i = jTable1.getSelectedRow();
+        if(i != -1 && mouseevent.getClickCount() == 2)
+            showMessage(i);
+    }
+    private void showMessage(int i) throws Exception
+    {
+        setCursor(Cursor.getPredefinedCursor(3));
+        Message message = search_tab.getMessage(i);
+        MessageViewer messageviewer = new MessageViewer(this);
+        messageviewer.registerComponentsInbox();
+        messageviewer.setMessage(message);
+        jScrollPane1.add(messageviewer);
+        jScrollPane1.setViewportView(messageviewer);
+        jScrollPane1.revalidate();
+        jScrollPane1.repaint();
+        setCursor(Cursor.getDefaultCursor());
+        setCursor(Cursor.getDefaultCursor());
+        setCursor(Cursor.getDefaultCursor());
+    }
     private void showAll()
     {
         for(int i = msgs.length - 1; i >= 0; i--)
@@ -42,6 +66,25 @@ public class SearchPanel extends JPanel
         jTable1.setSelectionBackground(new Color(149, 179, 249));
         jTable1.setSelectionForeground(Color.white);
         jTable1.setGridColor(new Color(149, 179, 249));
+        jTable1.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent mouseevent)
+            {
+                try {
+					tableSelectionChanged(mouseevent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+
+            final SearchPanel this$0;
+
+            
+            {
+                this$0 = SearchPanel.this;
+            }
+        }
+);
         TableColumn tablecolumn = jTable1.getColumnModel().getColumn(0);
         tablecolumn.setPreferredWidth(180);
         tablecolumn.setMaxWidth(200);
