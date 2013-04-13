@@ -16,7 +16,7 @@ public class EmailClient extends JFrame
 	public boolean flag=false;
 	public boolean flag1=false;
 	private Session session = null;
-	private URLName urlname = null;
+	//private URLName urlname = null;
     public EmailClient()
     {
     	
@@ -94,7 +94,8 @@ public class EmailClient extends JFrame
 	    Folder[] f = store1.getDefaultFolder().list();
 	    for(Folder fd:f)
 	        System.out.println(">> "+fd.getName());*/
-        urlname = new URLName((new StringBuilder()).append("pop3").append("://").append(username).append(":").append(password).append("pop.gmail.com").toString());
+        URLName urlname = new URLName((new StringBuilder()).append("pop3").append("://").append(username).append(":").append(password).append("pop.gmail.com").toString());
+        System.out.println(urlname);
         status.setText("Loading Inbox.......");
         (new GMAILViewer(session, store, urlname)).setVisible(true);
         status.setText("Loading Inbox.......");

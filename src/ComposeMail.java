@@ -1,5 +1,9 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
@@ -36,8 +40,6 @@ public class ComposeMail extends JPanel
         deflist.addElement(file.getName());
         cur_dir = new File(file.getParent());
         setCursor(Cursor.getDefaultCursor());
-        setCursor(Cursor.getDefaultCursor());
-        setCursor(Cursor.getDefaultCursor());
     }
 
     private void resetFields()
@@ -55,9 +57,21 @@ public class ComposeMail extends JPanel
         setCursor(Cursor.getPredefinedCursor(3));
         if(!toField.getText().equals(""))
         {
+        	String host = "smtp.gmail.com";
+            Properties props = System.getProperties();
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            props.put("mail.smtp.host", host);
+            props.put("mail.smtp.port", "465");
+            props.put("mail.smtp.socketFactory.class",
+				"javax.net.ssl.SSLSocketFactory");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.debug", "true");
             viewer.setStatus("Sending.....");
+            session = Session.getInstance(props, new GMailAuthenticator((urlName.toString().substring(7)), "kotovsk88"));
             message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(urlName.getUsername()));
+            session.setDebug(true);
+            message.setFrom(new InternetAddress(urlName.toString().substring(7)));
             message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(toField.getText()));
             if(!ccField.getText().equals(""))
                 message.addRecipient(javax.mail.Message.RecipientType.CC, new InternetAddress(ccField.getText()));
@@ -70,7 +84,7 @@ public class ComposeMail extends JPanel
             message.setContent(multipart);
             message.saveChanges();
             Transport transport = session.getTransport("smtp");
-            transport.connect();
+            transport.connect(host, urlName.toString().substring(7), "kotovsk88");
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
             viewer.setStatus("Message Sent");
@@ -78,22 +92,39 @@ public class ComposeMail extends JPanel
         }
         setCursor(Cursor.getDefaultCursor());
         viewer.setStatus("Your Message could not be sent.");
-        setCursor(Cursor.getDefaultCursor());
-        setCursor(Cursor.getDefaultCursor());
     }
 
     private void registerComponents()
     {
-    /*    send.addActionListener(new  Object()   
-    class _anm1 {}
-
-);
-        attachFile.addActionListener(new  Object()  
-    class _anm2 {}
-
-);*/
+        send.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent actionevent)
+            {
+                try {
+					sendActionPerformed(actionevent);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+            }
+        });
+        attachFile.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent actionevent)
+            {
+                try {
+					attachFileActionPerformed(actionevent);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+            }
+        });
     }
-
+    private void sendActionPerformed(ActionEvent actionevent) throws AddressException, MessagingException
+    {
+    	sendMessage();
+    }
+    private void attachFileActionPerformed(ActionEvent actionevent) throws MessagingException
+    {
+    	attach();
+    }
     private void initComponents()
     {
         jPanel1 = new JPanel();

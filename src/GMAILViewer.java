@@ -43,13 +43,15 @@ public class GMAILViewer extends JFrame
 	private String data[] = new String[5];
 	private String pas[] = new String [5];
 	private boolean flag=false;
+	private URLName URLname = null;
     public GMAILViewer(Session session1, Store store1, URLName urlname) throws Throwable
     {
         initComponents();
         session = session1;
         store = store1;
-        urlName = urlname;
+        URLname = urlname;
         loadInbox();
+        System.out.println(URLname.toString().substring(7));
     }
 
     private void loadInbox()
@@ -307,7 +309,7 @@ public class GMAILViewer extends JFrame
 
     private void composeActionPerformed(ActionEvent actionevent)
     {
-        ComposeMail composemail = new ComposeMail(session, urlName, this);
+        ComposeMail composemail = new ComposeMail(session, URLname, this);
         scrollPane.add(composemail);
         composemail.setVisible(true);
         scrollPane.setViewportView(composemail);
