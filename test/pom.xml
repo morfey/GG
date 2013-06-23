@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="1" failures="1" hostname="HOSTNAME" name="PACKAGENAME" tests="3" time="3.0" timestamp="2010-06-30T05:16:00Z">
+  <testcase name="TESTCASE1-SUCCESS" time="1.0" />
+  <testcase name="TESTCASE2-ERROR" time="1.0">
+    <error message="ERR_MSG">STACK_TRACE</error>
+  </testcase>
+  <testcase name="TESTCASE3-FAILURE" time="1.0">
+    <failure message="FAIL_MSG">STACK_TRACE</failure>
+  </testcase>
+  <system-out>STDOUT</system-out>
+  <system-err>STDERR</system-err>
+</testsuite>
